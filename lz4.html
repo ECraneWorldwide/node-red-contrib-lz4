@@ -1,0 +1,37 @@
+<script type="text/x-red" data-template-name="lz4">
+    <div class="form-row">
+	      <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="node-red:common.label.name"></span></label>
+	      <input type="text" id="node-input-name" data-i18n="[placeholder]node-red:common.label.name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-decodeStr"><i class="fa fa-file-text"></i> Decode to string</label>
+        <input type="checkbox" id="node-input-decodeStr" style="display:inline-block; width:15px; vertical-align:baseline;">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="lz4">
+    <p>If the input is a compressed buffer it tries to decompress to a buffer.</p>
+    <p>If the input is an uncompressed buffer (lz4 magic bytes not detected) it tries to compress to a buffer.</p>
+    <p>If the input is a string it creates a compressed buffer from the string.</p>
+    <p>If the input is a an object, it converts it to JSON and then creates a compressed buffer.</p>
+    <p>If "Decode to string" is on and the input is a compressed buffer, it tries to decompress to a string.</p>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('lz4',
+        {
+            category:   'function',
+            color:      '#DEBD5C',
+            defaults:
+            {
+                name: { value: '' },
+                decodeStr: { value: false }
+            },
+            icon:       'file.png',
+            inputs:     1,
+            label:      function() { return this.name || 'lz4'; },
+            labelStyle: function() { return this.name ? 'node_label_italic' : ''; },
+            outputs:    1
+        }
+    );
+</script>
