@@ -4,15 +4,25 @@ const LZ_SIGNATURE  = Buffer.from([0x04, 0x22, 0x4D, 0x18]);
 const CHAR_ENC      = 'utf8';
 const TYPE_STRING   = 'string';
 const TYPE_OBJECT   = 'object';
+const OUTPUT_BUFFER = 'buffer';
+const OUTPUT_UTF8   = 'utf8';
+const OUTPUT_JSON   = 'json';
 
-function tryDecode(msg, node, asString)
+function tryDecode(msg, node, output)
 {
     try
     {
         msg.payload = lz4.decode(msg.payload);
 
-        if(asString)
-            msg.payload = msg.payload.toString(CHAR_ENC);
+        switch (output)
+        {
+            case OUTPUT_UTF8:
+                msg.payload = msg.payload.toString(CHAR_ENC);
+                break;
+            case OUTPUT_JSON:
+                msg.payload = JSON.parse(msg.payload.toString(CHAR_ENC));
+                break;
+        }
 
         return node.send(msg);
     }
@@ -43,7 +53,7 @@ module.exports = function(RED)
         RED.nodes.createNode(this, n);
 
         const node = this;
-        const decodeStr = n.decodeStr;
+        const datatype = n.datatype;
 
         this.on(
             'input',
@@ -57,7 +67,7 @@ module.exports = function(RED)
                 if(Buffer.isBuffer(value))
                 {
                     if(value.slice(0, 4).equals(LZ_SIGNATURE))
-                        return tryDecode(msg, node, decodeStr);
+                        return tryDecode(msg, node, datatype);
                     else
                         return tryEncode(msg, node);
                 }

@@ -4,17 +4,20 @@
 	      <input type="text" id="node-input-name" data-i18n="[placeholder]node-red:common.label.name">
     </div>
     <div class="form-row">
-        <label for="node-input-decodeStr"><i class="fa fa-file-text"></i> Decode to string</label>
-        <input type="checkbox" id="node-input-decodeStr" style="display:inline-block; width:15px; vertical-align:baseline;">
+        <label for="node-input-datatype"><i class="fa fa-file-text"></i> Decompress as</label>
+        <select id="node-input-datatype" style="width:70%;">
+            <option value="buffer">a Buffer</option>
+            <option value="utf8">a String</option>
+            <option value="json">a parsed JSON object</option>
+        </select>
     </div>
 </script>
 
 <script type="text/x-red" data-help-name="lz4">
-    <p>If the input is a compressed buffer it tries to decompress to a buffer.</p>
+    <p>If the input is a compressed buffer (lz4 magic bytes detected) it tries to decompress into the requested output type.</p>
     <p>If the input is an uncompressed buffer (lz4 magic bytes not detected) it tries to compress to a buffer.</p>
     <p>If the input is a string it creates a compressed buffer from the string.</p>
     <p>If the input is a an object, it converts it to JSON and then creates a compressed buffer.</p>
-    <p>If "Decode to string" is on and the input is a compressed buffer, it tries to decompress to a string.</p>
 </script>
 
 <script type="text/javascript">
@@ -24,8 +27,8 @@
             color:      '#DEBD5C',
             defaults:
             {
-                name: { value: '' },
-                decodeStr: { value: false }
+                name:     { value: '' },
+                datatype: { value: 'buffer' }
             },
             icon:       'file.png',
             inputs:     1,
